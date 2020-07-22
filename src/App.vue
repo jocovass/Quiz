@@ -1,11 +1,16 @@
 <template>
   <div id="app">
-    <Header />
+    <Header :score="score" :attempts="attempts" />
 
     <b-container class="bv-example-row">
       <b-row>
         <b-col sm="6" offset="3">
-          <QuestionBox />
+          <QuestionBox
+            v-if="questions.length"
+            :currentQuestion="questions[index]"
+            :next="next"
+            :increment="increment"
+          />
         </b-col>
       </b-row>
     </b-container>
@@ -25,7 +30,21 @@ export default {
   data() {
     return {
       questions: [],
+      index: 0,
+      score: 0,
+      attempts: 0,
     };
+  },
+  methods: {
+    next() {
+      this.index++;
+    },
+    increment(isCorrect) {
+      if (isCorrect) {
+        this.score++;
+      }
+      this.attempts++;
+    },
   },
   mounted: function() {
     fetch("https://opentdb.com/api.php?amount=10&category=21&type=multiple", {
